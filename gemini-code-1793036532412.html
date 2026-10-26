@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Majed Oip - تطبيق التواصل الاجتماعي الخارق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0B0F19;
+            --bg-card: #151C2C;
+            --bg-glass: rgba(21, 28, 44, 0.75);
+            --primary: #00F2FE;
+            --secondary: #4FACFE;
+            --accent: #8A2BE2;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --danger: #FF4757;
+            --success: #2ED573;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.15) 0%, transparent 40%);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            max-height: 950px;
+            background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        @media(min-width: 481px) {
+            .app-container {
+                border-radius: 30px;
+                height: 90vh;
+            }
+        }
+
+        /* شاشة تسجيل الدخول */
+        .auth-screen {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-main);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .auth-logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .auth-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .auth-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0,242,254,0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 15px;
+            border: none;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 20px rgba(0,242,254,0.4);
+        }
+
+        .btn-google {
+            background: #fff;
+            color: #333;
+        }
+
+        /* الهيدر العلوي */
+        .app-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            z-index: 10;
+        }
+
+        .logo-area {
+            font-size: 1.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-icon-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .header-icon-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* المحتوى الأساسي */
+        .app-content {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            padding-bottom: 70px;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* القصص (Stories) */
+        .stories-bar {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            scrollbar-width: none;
+        }
+        .stories-bar::-webkit-scrollbar { display: none; }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .story-ring {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+        }
+
+        .story-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--bg-main);
+        }
+
+        .story-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* المنشورات */
+        .post-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .post-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .post-username-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .post-username {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .verified-badge {
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        .post-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .post-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 12px;
+            max-height: 300px;
+            object-fit: cover;
+            margin-bottom: 12px;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+
+        .post-action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .post-action-btn:hover, .post-action-btn.active {
+            color: var(--primary);
+        }
+
+        /* نافذة الدردشة الفورية */
+        .chat-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .chat-list-item:hover {
+            border-color: var(--primary);
+        }
+
+        .chat-room {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-main);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            display: none;
+        }
+
+        .chat-room-header {
+            padding: 15px;
+            background: var(--bg-glass);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message-bubble.incoming {
+            background: var(--bg-card);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message-bubble.outgoing {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            font-weight: 600;
+        }
+
+        .chat-input-area {
+            padding: 12px;
+            background: var(--bg-glass);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px 15px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: white;
+            outline: none;
+        }
+
+        /* لوحة التحكم الإدارية */
+        .admin-panel-card {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .admin-badge-tag {
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* شريط التنقل السفلي */
+        .nav-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 65px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 40;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- شاشة تسجيل الدخول -->
+        <div id="authScreen" class="auth-screen">
+            <div class="auth-logo">Majed Oip</div>
+            <div class="auth-subtitle">تطبيق التواصل والدردشة الأكثر أماناً وحماية</div>
+            <input type="text" id="usernameInput" class="auth-input" placeholder="أدخل اسمك الكامل أو المعرف...">
+            <input type="email" id="emailInput" class="auth-input" placeholder="البريد الإلكتروني (اكتب majowidj@gmail.com للإدارة)">
+            <button class="btn btn-primary" onclick="login()"><i class="fa-solid fa-rocket"></i> دخول التطبيق</button>
+            <button class="btn btn-google" onclick="loginAsGoogle()"><i class="fa-brands fa-google"></i> تسجيل الدخول بـ Google</button>
+        </div>
+
+        <!-- الهيدر العلوي -->
+        <div class="app-header">
+            <div class="logo-area" id="appHeaderTitle">Majed Oip</div>
+            <div class="header-icons">
+                <button class="header-icon-btn" onclick="openCalls()"><i class="fa-solid fa-phone"></i></button>
+                <button class="header-icon-btn" onclick="openProfile()"><i class="fa-solid fa-gear"></i></button>
+            </div>
+        </div>
+
+        <!-- محتوى التطبيق -->
+        <div class="app-content">
+            <!-- تبويب الرئيسية والقصص -->
+            <div id="tab-home" class="tab-pane active">
+                <div class="stories-bar" id="storiesBar">
+                    <div class="story-item" onclick="addNewStory()">
+                        <div class="story-ring" style="border: 2px dashed var(--primary);">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="story-img">
+                        </div>
+                        <span class="story-name">قصتك</span>
+                    </div>
+                </div>
+
+                <div id="postsFeed">
+                    <!-- منشور تجريبي -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-user-info">
+                                <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100" class="post-avatar">
+                                <div>
+                                    <div class="post-username-row">
+                                        <span class="post-username">عمر السوري</span>
+                                        <i class="fa-solid fa-circle-check verified-badge"></i>
+                                    </div>
+                                    <span class="post-time">معرف: #84920 • منذ ساعة</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-text">أهلاً بالجميع في تطبيق Majed Oip الخارق! تواصل سريع، أمان عالي، وتصميم عصري رائع. 🚀</div>
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600" class="post-image">
+                        <div class="post-actions">
+                            <button class="post-action-btn" onclick="toggleLike(this)"><i class="fa-regular fa-heart"></i> إعجاب</button>
+                            <button class="post-action-btn"><i class="fa-regular fa-comment"></i> تعليق</button>
+                            <button class="post-action-btn"><i class="fa-solid fa-share"></i> مشاركة</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب المحادثات والدردشة -->
+            <div id="tab-chats" class="tab-pane">
+                <div style="margin-bottom: 15px;">
+                    <input type="text" id="searchIdInput" class="auth-input" placeholder="البحث برقم ID الأصدقاء (مثال: 94821)..." oninput="searchUsers(this.value)">
+                </div>
+                <div id="chatListContainer">
+                    <div class="chat-list-item" onclick="openChatRoom('رامي سيرحان', '#83921', 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100', true)">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; display: flex; align-items: center; gap: 5px;">رامي سيرحان <i class="fa-solid fa-circle-check verified-badge"></i></div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">ID: #83921 • متصل الآن</div>
+                        </div>
+                    </div>
+                    <div class="chat-list-item" onclick="openChatRoom('سارة أحمد', '#10924', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100', false)">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700;">سارة أحمد</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">ID: #10924 • مرحباً بك!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب لوحة الإدارة والدعم (تظهر للمسؤول فقط) -->
+            <div id="tab-admin" class="tab-pane">
+                <div class="admin-panel-card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h3 style="font-size: 1.1rem;"><i class="fa-solid fa-shield-halved"></i> لوحة الإدارة والتحكم</h3>
+                        <span class="admin-badge-tag">مدير التطبيق</span>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">بصفتك المدير (majowidj@gmail.com)، يمكنك منح الشارات الزرقاء أو حظر الحسابات المخالفة.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="background: var(--bg-card); padding: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <span>عمر السوري (#84920)</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="btn" style="padding: 5px 10px; font-size: 0.75rem; background: var(--primary); color: #000;" onclick="toggleVerify(this)">سحب/منح الشارة</button>
+                                <button class="btn" style="padding: 5px 10px; font-size: 0.75rem; background: var(--danger); color: #fff;" onclick="banUser(this)">حظر</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel-card">
+                    <h3><i class="fa-solid fa-download"></i> مشاركة وتحويل التطبيق APK</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin: 10px 0;">يمكنك مشاركة هذا التطبيق مع أصدقائك أو تحويله إلى ملف APK عبر مواقع الويب المجانية.</p>
+                    <button class="btn btn-primary" onclick="copyAppLink()"><i class="fa-solid fa-share-nodes"></i> مشاركة رابط التطبيق</button>
+                </div>
+            </div>
+
+            <!-- تبويب الإعدادات والبروفايل -->
+            <div id="tab-profile" class="tab-pane">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img id="profileAvatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150" style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); margin-bottom: 10px;">
+                    <h3 id="profileDisplayName">مستخدم Majed</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);" id="profileDisplayId">ID: #58392</p>
+                </div>
+
+                <div class="post-card">
+                    <h4 style="margin-bottom: 10px; font-size: 0.95rem;">تعديل الملف الشخصي (يمكن تغيير الاسم كل أسبوع)</h4>
+                    <input type="text" id="editNameInput" class="auth-input" placeholder="اسم البروفايل الجديد...">
+                    <button class="btn btn-primary" onclick="updateProfileName()">حفظ التعديلات</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- غرفة الدردشة الفورية (مخفية حتى يتم النقر عليها) -->
+        <div id="chatRoom" class="chat-room">
+            <div class="chat-room-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button class="header-icon-btn" onclick="closeChatRoom()"><i class="fa-solid fa-arrow-right"></i></button>
+                    <img id="activeChatAvatar" src="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                    <div>
+                        <div id="activeChatName" style="font-weight: 700; font-size: 0.95rem;"></div>
+                        <div id="activeChatId" style="font-size: 0.75rem; color: var(--text-muted);"></div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="header-icon-btn" onclick="startCall('audio')"><i class="fa-solid fa-phone"></i></button>
+                    <button class="header-icon-btn" onclick="startCall('video')"><i class="fa-solid fa-video"></i></button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessagesContainer">
+                <div class="message-bubble incoming">أهلاً بك في محادثات Majed Oip الآمنة والمشفرة!</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatMessageInput" class="chat-input" placeholder="اكتب رسالتك هنا...">
+                <button class="btn btn-primary" style="width: 50px; border-radius: 50%; padding: 0;" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+
+        <!-- شريط التنقل السفلي -->
+        <div class="nav-bar">
+            <button class="nav-item active" onclick="switchTab('home', this)">
+                <i class="fa-solid fa-house"></i>
+                <span>الرئيسية</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('chats', this)">
+                <i class="fa-solid fa-comments"></i>
+                <span>الدردشة</span>
+            </button>
+            <button class="nav-item" id="adminNavBtn" onclick="switchTab('admin', this)" style="display: none;">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>الإدارة</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('profile', this)">
+                <i class="fa-solid fa-user"></i>
+                <span>حسابي</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = {
+            name: "مستخدم جديد",
+            email: "",
+            id: "#" + Math.floor(10000 + Math.random() * 90000),
+            isAdmin: false
+        };
+
+        function login() {
+            const name = document.getElementById('usernameInput').value.trim();
+            const email = document.getElementById('emailInput').value.trim().toLowerCase();
+            
+            if(!name) {
+                alert("الرجاء إدخال اسم المستخدم");
+                return;
+            }
+
+            currentUser.name = name;
+            currentUser.email = email;
+
+            if(email === 'majowidj@gmail.com') {
+                currentUser.isAdmin = true;
+                document.getElementById('adminNavBtn').style.display = 'flex';
+                alert("مرحباً بك مجدداً أيها المدير (Majed)! تم تفعيل صلاحيات الإدارة العليا والشارة الزرقاء.");
+            } else {
+                alert("مرحباً بك في Majed Oip!");
+            }
+
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('profileDisplayName').innerText = currentUser.name;
+            document.getElementById('profileDisplayId').innerText = "ID: " + currentUser.id;
+        }
+
+        function loginAsGoogle() {
+            document.getElementById('emailInput').value = 'majowidj@gmail.com';
+            document.getElementById('usernameInput').value = 'Majed (مدير التطبيق)';
+            login();
+        }
+
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+        }
+
+        function openChatRoom(name, id, avatar, isVerified) {
+            document.getElementById('activeChatName').innerText = name;
+            document.getElementById('

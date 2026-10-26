@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة التواصل الاجتماعي الخرافية | NexusSocial</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed top-5 left-5 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div id="app" class="flex flex-col min-h-screen">
+
+        <!-- AUTHENTICATION VIEW -->
+        <div id="authView" class="fixed inset-0 z-40 flex items-center justify-center bg-gradient-to-br from-emerald-600 via-teal-800 to-slate-900 p-4">
+            <div class="glass-card w-full max-w-md p-8 rounded-3xl shadow-2xl border border-white/20 text-center relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white text-3xl shadow-lg mb-6 shadow-emerald-500/30">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                
+                <h1 class="text-3xl font-black tracking-tight mb-2 text-slate-900 dark:text-white">NexusSocial</h1>
+                <p class="text-slate-600 dark:text-slate-300 text-sm mb-8">منصة التواصل الاجتماعي الأحدث والأكثر أماناً. تواصل، شارك، وكن مميزاً.</p>
+                
+                <div class="space-y-4">
+                    <button onclick="loginWithGoogle('majowidj@gmail.com')" class="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl font-bold shadow-sm transition-all transform active:scale-95 text-slate-800 dark:text-white">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-6 h-6" alt="Google">
+                        <span>تسجيل الدخول كـ (Admin) majowidj@gmail.com</span>
+                    </button>
+                    
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                        <span class="flex-shrink mx-4 text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">أو حساب تجريبي آخر</span>
+                        <div class="flex-grow border-t border-slate-300 dark:border-slate-700"></div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <input type="email" id="customEmailInput" placeholder="أدخل بريدك الإلكتروني (مثل user@gmail.com)" class="flex-1 px-4 py-3 bg-slate-100 dark:bg-slate-900/60 border border-slate-300 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-right">
+                        <button onclick="loginWithCustomEmail()" class="px-5 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition-all shadow-md shadow-emerald-600/30">دخول</button>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-xs text-slate-500 dark:text-slate-400">
+                    بمتابعتك أنت توافق على شروط الأمان وحماية خصوصية المستخدمين.
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN DASHBOARD (HIDDEN UNTIL AUTH) -->
+        <div id="mainDashboard" class="hidden flex flex-col min-h-screen">
+            
+            <!-- TOP NAVBAR -->
+            <header class="sticky top-0 z-30 glass-nav border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 py-3 transition-colors">
+                <div class="max-w-7xl mx-auto flex items-center justify-between">
+                    <!-- Logo & Search ID -->
+                    <div class="flex items-center gap-6">
+                        <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('feed')">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-black text-xl shadow-md shadow-emerald-500/20">
+                                N
+                            </div>
+                            <span class="text-xl font-black bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent hidden sm:inline">NexusSocial</span>
+                        </div>
+
+                        <!-- Search Friends by ID Bar -->
+                        <div class="relative hidden md:block w-64">
+                            <input type="text" id="searchIdInput" oninput="searchUserById(this.value)" placeholder="ابحث برقم الـ ID (مثل 100001)..." class="w-full pl-4 pr-10 py-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3 text-slate-400 text-xs"></i>
+                            <!-- Search Dropdown Results -->
+                            <div id="searchResultsDropdown" class="absolute top-full right-0 left-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl hidden z-50 max-h-60 overflow-y-auto p-2"></div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Tabs (Desktop) -->
+                    <nav class="hidden md:flex items-center gap-1 bg-slate-200/50 dark:bg-slate-900/50 p-1 rounded-full border border-slate-300/40 dark:border-slate-800">
+                        <button onclick="switchTab('feed')" id="nav-feed" class="nav-btn px-5 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all bg-emerald-600 text-white shadow-sm">
+                            <i class="fa-solid fa-house"></i> الرئيسية
+                        </button>
+                        <button onclick="switchTab('groups')" id="nav-groups" class="nav-btn px-5 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                            <i class="fa-solid fa-users-rectangle"></i> المجموعات
+                        </button>
+                        <button onclick="switchTab('messages')" id="nav-messages" class="nav-btn px-5 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+                            <i class="fa-solid fa-comments"></i> المحادثات والمكالمات
+                        </button>
+                        <button onclick="switchTab('admin')" id="nav-admin" class="nav-btn px-5 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 hidden">
+                            <i class="fa-solid fa-shield-halved"></i> لوحة الإدارة والدعم
+                        </button>
+                    </nav>
+
+                    <!-- Right Controls: Profile & Theme Toggle -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full bg-slate-200/60 dark:bg-slate-800/60 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:scale-105 transition-transform">
+                            <i id="themeIcon" class="fa-solid fa-moon text-sm"></i>
+                        </button>
+
+                        <!-- User Profile Dropdown / Button -->
+                        <div class="flex items-center gap-3 pl-2 border-l border-slate-200 dark:border-slate-800">
+                            <div class="relative cursor-pointer group" onclick="switchTab('profile')">
+                                <img id="headerUserAvatar" src="" alt="User" class="w-10 h-10 rounded-full object-cover ring-2 ring-emerald-500">
+                                <span id="headerVerifiedBadge" class="absolute -bottom-1 -right-1 bg-blue-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center hidden" title="موثق">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                            </div>
+                            <div class="hidden sm:block text-right">
+                                <div id="headerUserName" class="text-xs font-black truncate max-w-[120px]"></div>
+                                <div id="headerUserUid" class="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono">ID: <span></span></div>
+                            </div>
+                            <button onclick="logout()" class="w-9 h-9 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all ml-1" title="تسجيل الخروج">
+                                <i class="fa-solid fa-power-off text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MOBILE BOTTOM NAV -->
+            <div class="md:hidden fixed bottom-0 left-0 right-0 z-30 glass-nav border-t border-slate-200 dark:border-slate-800 px-4 py-2 flex justify-around items-center">
+                <button onclick="switchTab('feed')" id="mob-nav-feed" class="flex flex-col items-center text-emerald-600 dark:text-emerald-400 text-xs gap-1">
+                    <i class="fa-solid fa-house text-base"></i>
+                    <span>الرئيسية</span>
+                </button>
+                <button onclick="switchTab('groups')" id="mob-nav-groups" class="flex flex-col items-center text-slate-500 dark:text-slate-400 text-xs gap-1">
+                    <i class="fa-solid fa-users-rectangle text-base"></i>
+                    <span>المجموعات</span>
+                </button>
+                <button onclick="switchTab('messages')" id="mob-nav-messages" class="flex flex-col items-center text-slate-500 dark:text-slate-400 text-xs gap-1">
+                    <i class="fa-solid fa-comments text-base"></i>
+                    <span>المحادثات</span>
+                </button>
+                <button onclick="switchTab('admin')" id="mob-nav-admin" class="flex flex-col items-center text-amber-500 text-xs gap-1 hidden">
+                    <i class="fa-solid fa-shield-halved text-base"></i>
+                    <span>الإدارة</span>
+                </button>
+                <button onclick="switchTab('profile')" id="mob-nav-profile" class="flex flex-col items-center text-slate-500 dark:text-slate-400 text-xs gap-1">
+                    <i class="fa-solid fa-user text-base"></i>
+                    <span>حسابي</span>
+                </button>
+            </div>
+
+            <!-- MAIN CONTENT AREA -->
+            <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6 pb-24 md:pb-8">
+
+                <!-- TAB 1: FEED & STORIES -->
+                <div id="tab-feed" class="tab-content space-y-6">
+                    <!-- Stories Bar -->
+                    <div class="bg-white dark:bg-slate-900 p-4 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-black flex items-center gap-2">
+                                <i class="fa-solid fa-bolt text-amber-500"></i> قصص الأصدقاء (Stories)
+                            </h3>
+                            <button onclick="openCreateStoryModal()" class="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-plus-circle"></i> إضافة قصة
+                            </button>
+                        </div>
+                        <div id="storiesContainer" class="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+                            <!-- Dynamic Stories -->
+                        </div>
+                    </div>
+
+                    <!-- Create Post Box -->
+                    <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3">
+                            <img id="feedUserAvatar" src="" class="w-12 h-12 rounded-full object-cover ring-2 ring-emerald-500/50">
+                            <textarea id="postContentInput" rows="2" placeholder="بماذا تفكر اليوم؟ شارك أفكارك، صور، أو فيديوهات..." class="w-full bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 resize-none"></textarea>
+                        </div>
+                        <div id="postMediaPreviewContainer" class="hidden relative rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 p-2 text-center">
+                            <button onclick="removePostMedia()" class="absolute top-3 left-3 bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-xs shadow-lg"><i class="fa-solid fa-xmark"></i></button>
+                            <img id="postImagePreview" class="max-h-60 mx-auto rounded-xl hidden object-contain">
+                            <video id="postVideoPreview" class="max-h-60 mx-auto rounded-xl hidden" controls></video>
+                        </div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+                            <div class="flex items-center gap-2">
+                                <label class="cursor-pointer px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-slate-700 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-bold transition-all flex items-center gap-2">
+                                    <i class="fa-solid fa-image"></i> صورة / فيديو
+                                    <input type="file" id="postMediaInput" accept="image/*,video/*" onchange="handlePostMediaUpload(event)" class="hidden">
+                                </label>
+                                <button onclick="insertEmojiIntoPost('😊')" class="p-2 text-slate-500 hover:text-amber-500 text-base"><i class="fa-regular fa-face-smile"></i></button>
+                                <button onclick="insertEmojiIntoPost('❤️')" class="p-2 text-slate-500 hover:text-red-500 text-base"><i class="fa-solid fa-heart"></i></button>
+                            </div>
+                            <button onclick="createNewPost()" class="px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold rounded-xl shadow-md shadow-emerald-600/30 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> نشر المنشور
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Post Feed Stream -->
+                    <div id="postsFeedContainer" class="space-y-6">
+                        <!-- Dynamic Posts will be injected here -->
+                    </div>
+                </div>
+
+                <!-- TAB 2: GROUPS / COMMUNITIES -->
+                <div id="tab-groups" class="tab-content hidden space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-black">المجموعات والمجتمعات</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">انضم إلى مجموعات الاهتمامات أو أنشئ مجموعتك الخاصة الآن.</p>
+                        </div>
+                        <button onclick="openCreateGroupModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> إنشاء مجموعة
+                        </button>
+                    </div>
+
+                    <div id="groupsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Dynamic Groups -->
+                    </div>
+                </div>
+
+                <!-- TAB 3: MESSAGING & CALLS -->
+                <div id="tab-messages" class="tab-content hidden h-[calc(100vh-140px)]">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm h-full flex overflow-hidden">
+                        <!-- Chat Sidebar -->
+                        <div class="w-full md:w-80 border-l border-slate-200 dark:border-slate-800 flex flex-col">
+                            <div class="p-4 border-b border-slate-200 dark:border-slate-800">
+                                <h3 class="font-black text-sm mb-3">المحادثات المباشرة</h3>
+                                <input type="text" id="chatSearchInput" oninput="filterChatContacts(this.value)" placeholder="ابحث في المحادثات..." class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs focus:outline-none">
+                            </div>
+                            <div id="chatContactsList" class="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+                                <!-- Dynamic Contacts -->
+                            </div>
+                        </div>
+
+                        <!-- Chat Conversation Area -->
+                        <div id="chatMainArea" class="hidden md:flex flex-1 flex-col bg-slate-50/50 dark:bg-slate-950/50">
+                            <!-- Active Chat Header -->
+                            <div class="p-4 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <img id="activeChatAvatar" src="" class="w-10 h-10 rounded-full object-cover">
+                                    <div>
+                                        <h4 id="activeChatName" class="font-black text-xs"></h4>
+                                        <span class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> متصل الآن</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <button onclick="startVoiceCall()" class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white flex items-center justify-center transition-all" title="مكالمة صوتية">
+                                        <i class="fa-solid fa-phone text-sm"></i>
+                                    </button>
+                                    <button onclick="startVideoCall()" class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 hover:bg-blue-500 hover:text-white flex items-center justify-center transition-all" title="مكالمة فيديو">
+                                        <i class="fa-solid fa-video text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Messages History Box -->
+                            <div id="chatMessagesContainer" class="flex-1 p-4 overflow-y-auto space-y-3">
+                                <!-- Dynamic Messages -->
+                            </div>
+
+                            <!-- Message Input Box -->
+                            <div class="p-3 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                                <input type="text" id="chatMessageInput" onkeypress="handleChatKeyPress(event)" placeholder="اكتب رسالتك هنا..." class="flex-1 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 rounded-2xl text-xs focus:outline-none">
+                                <button onclick="sendChatMessage()" class="w-10 h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center shadow-md">
+                                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: PROFILE MANAGEMENT -->
+                <div id="tab-profile" class="tab-content hidden max-w-2xl mx-auto space-y-6">
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-6 sm:p-8 space-y-6">
+                        <div class="text-center">
+                            <h2 class="text-2xl font-black">إعدادات الحساب الشخصي</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">تعديل اسمك الشخصي (مرة كل أسبوع) وصورتك الشخصية.</p>
+                        </div>
+
+                        <!-- Avatar Editor -->
+                        <div class="flex flex-col sm:flex-row items-center gap-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                            <div class="relative">
+                                <img id="profileEditAvatar" src="" class="w-24 h-24 rounded-full object-cover ring-4 ring-emerald-500 shadow-lg">
+                                <label class="absolute bottom-0 right-0 bg-emerald-600 hover:bg-emerald-700 text-white w-8 h-8 rounded-full flex items-center justify-center cursor-pointer shadow-md text-xs">
+                                    <i class="fa-solid fa-camera"></i>
+                                    <input type="file" accept="image/*" onchange="updateProfileAvatar(event)" class="hidden">
+                                </label>
+                            </div>
+                            <div class="space-y-1 text-center sm:text-right">
+                                <div class="flex items-center justify-center sm:justify-start gap-2">
+                                    <h3 id="profileEditNameDisplay" class="text-lg font-black"></h3>
+                                    <span id="profileEditVerifiedBadge" class="bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full hidden"><i class="fa-solid fa-check"></i> موثق</span>
+                                </div>
+                                <p class="text-xs text-emerald-600 dark:text-emerald-400 font-mono">رقم الـ ID الفريد: <span id="profileEditUidDisplay" class="font-bold"></span></p>
+                                <p class="text-[10px] text-slate-500">حساب موثوق لدى الإدارة ومحمي بقوانين المنصة.</p>
+                            </div>
+                        </div>
+
+                        <!-- Name Edit Form -->
+                        <div class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">تعديل الاسم الظاهر (مسموح مرة واحدة كل أسبوع)</label>
+                                <input type="text" id="newNameInput" class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <p id="nameCooldownNotice" class="text-[11px] text-amber-500 mt-1.5 font-medium"></p>
+                            </div>
+                            <button onclick="saveProfileName()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all">
+                                حفظ التغييرات
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: ADMIN & MODERATION PANEL -->
+                <div id="tab-admin" class="tab-content hidden space-y-6">
+                    <div class="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-6 rounded-3xl border border-amber-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-amber-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-amber-500/30">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-black">لوحة الإدارة والدعم العليا (Admin Panel)</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">إدارة الحسابات، منح الشارة الزرقاء، وحظر المخالفين (خاص بالحساب الرئيسي majowidj@gmail.com).</p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2 bg-amber-500 text-slate-950 font-black text-xs rounded-xl shadow-sm">
+                            صلاحيات كاملة 🛡️
+                        </div>
+                    </div>
+
+                    <!-- Admin Statistics Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <div id="adminTotalUsersCount" class="text-2xl font-black">0</div>
+                                <div class="text-xs text-slate-500">إجمالي المستخدمين المسجلين</div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-certificate"></i>
+                            </div>
+                            <div>
+                                <div id="adminVerifiedCount" class="text-2xl font-black">0</div>
+                                <div class="text-xs text-slate-500">الحسابات الموثقة (الشارة الزرقاء)</div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-red-500/10 text-red-500 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-ban"></i>
+                            </div>
+                            <div>
+                                <div id="adminBannedCount" class="text-2xl font-black">0</div>
+                                <div class="text-xs text-slate-500">الحسابات المحظورة / الموقوفة</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Users Management Table -->
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <h3 class="font-black text-sm">قائمة جميع المستخدمين في المنصة</h3>
+                            <input type="text" id="adminSearchUserInput" oninput="renderAdminUsersTable(this.value)" placeholder="ابحث بالاسم أو البريد..." class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs focus:outline-none">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-right text-xs">
+                                <thead class="bg-slate-50 dark:bg-slate-800/60 text-slate-500 border-b border-slate-200 dark:border-slate-700">
+                                    <tr>
+                                        <th class="p-4">المستخدم</th>
+                                        <th class="p-4">البريد الإلكتروني / ID</th>
+                                        <th class="p-4">الحالة</th>
+                                        <th class="p-4">الشارة الزرقاء</th>
+                                        <th class="p-4 text-center">الإجراءات والتحكم</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminUsersTableBody" class="divide-y divide-slate-100 dark:divide-slate-800">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL: CREATE STORY -->
+    <div id="storyModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md p-6 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-black text-lg">إضافة قصة جديدة (Story)</h3>
+                <button onclick="closeModal('storyModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="storyTextInput" placeholder="اكتب نصاً لقصتك..." class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm focus:outline-none">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-2">أو ارفع صورة/فيديو للقصة</label>
+                    <input type="file" id="storyMediaInput" accept="image/*,video/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 dark:file:bg-slate-800 dark:file:text-emerald-400 hover:file:bg-emerald-100">
+                </div>
+                <button onclick="submitNewStory()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md">نشر القصة الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: CREATE GROUP -->
+    <div id="groupModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-md p-6 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-black text-lg">إنشاء مجموعة جديدة</h3>
+                <button onclick="closeModal('groupModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="groupNameInput" placeholder="اسم المجموعة (مثل: عشاق التكنولوجيا)..." class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm focus:outline-none">
+                <textarea id="groupDescInput" placeholder="وصف المجموعة وأهدافها..." rows="3" class="w-full px-4 py-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-sm focus:outline-none resize-none"></textarea>
+                <button onclick="submitNewGroup()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md">إنشاء المجموعة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: VOICE / VIDEO CALL SIMULATION -->
+    <div id="callModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xl hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-lg p-8 rounded-3xl border border-slate-800 text-center space-y-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent pointer-events-none"></div>
+            <div class="relative inline-block">
+                <img id="callUserAvatar" src="" class="w-28 h-28 rounded-full object-cover ring-4 ring-emerald-500 animate-pulse mx-auto shadow-xl">
+            </div>
+            <div>
+                <h3 id="callUserName" class="text-xl font-black text-white"></h3>
+                <p id="callStatusText" class="text-xs text-emerald-400 font-semibold mt-1">جاري الاتصال...</p>
+            </div>
+            <div class="flex items-center justify-center gap-6 pt-4">
+                <button onclick="toggleMuteCall()" id="muteCallBtn" class="w-14 h-14 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center text-lg shadow-lg">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button onclick="endActiveCall()" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center text-xl shadow-xl shadow-red-600/40">
+                    <i class="fa-solid fa-phone-slash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION JAVASCRIPT -->
+    <script>
+        // --- MASTER STATE & STORAGE ---
+        const MASTER_ADMIN_EMAIL = "majowidj@gmail.com";
+        
+        let currentUser = JSON.parse(localStorage.getItem('nexus_current_user')) || null;
+        let usersDB = JSON.parse(localStorage.getItem('nexus_users_db')) || [
+            {
+                uid: "100001",
+                name: "المدير العام (Majid)",
+                email: "majowidj@gmail.com",
+                avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+                verified: true,
+                banned: false,
+                lastNameChange: 0
+            },
+            {
+                uid: "100002",
+                name: "سارة أحمد",
+                email: "sara@gmail.com",
+                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+                verified: true,
+                banned: false,
+                lastNameChange: 0
+            },
+            {
+                uid: "100003",
+                name: "محمد خالد",
+                email: "mohamed@gmail.com",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+                verified: false,
+                banned: false,
+                lastNameChange: 0
+            }
+        ];
+
+        let postsDB = JSON.parse(localStorage.getItem('nexus_posts_db')) || [
+            {
+                id: 1,
+                authorUid: "100001",
+                content: "أهلاً بالجميع في منصة NexusSocial الجديدة كلياً! منصتكم الآمنة والمطورة للتواصل بكل حرية وسلاسة. لا تنسوا تجربة ميزات المجموعات والمكالمات والقصص. 🚀",
+                mediaUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80",
+                mediaType: "image",
+                likes: ["100002", "100003"],
+                comments: [
+                    { authorUid: "100002", text: "منصة رائعة جداً ومبروك الافتتاح!" }
+                ],
+                timestamp: Date.now() - 3600000
+            }
+        ];
+
+        let storiesDB = JSON.parse(localStorage.getItem('nexus_stories_db')) || [
+            {
+                id: 1,
+                authorUid: "100002",
+                text: "يوم جميل في العمل! ☀️",
+                mediaUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80",
+                timestamp: Date.now() - 1800000
+            }
+        ];
+
+        let groupsDB = JSON.parse(localStorage.getItem('nexus_groups_db')) || [
+            {
+                id: 1,
+                name: "مطوروا البرمجيات العرب",
+                description: "مجموعة لتبادل الخبرات في تطوير الويب والتطبيقات.",
+                members: ["100001", "100002", "100003"],
+                creatorUid: "100001"
+            },
+            {
+                id: 2,
+                name: "عشاق التصوير الرقمي",
+                description: "شارك أفضل صورك وعدساتك مع الأصدقاء.",
+                members: ["100001", "100003"],
+                creatorUid: "100002"
+            }
+        ];
+
+        let chatsDB = JSON.parse(localStorage.getItem('nexus_chats_db')) || {
+            "100001_100002": [
+                { senderUid: "100002", text: "مرحباً استاذ ماجد، كيف حال المنصة؟", time: Date.now() - 7200000 },
+                { senderUid: "100001", text: "أهلاً سارة، المنصة تعمل بكفاءة عالية وأمان تام!", time: Date.now() - 3600000 }
+            ]
+        };
+
+        let activeChatUser = null;
+        let tempPostMedia = { url: "", type: "" };
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            checkAuthStatus();
+            initDarkMode();
+        });
+
+        function saveAllToStorage() {
+            localStorage.setItem('nexus_current_user', JSON.stringify(currentUser));
+            localStorage.setItem('nexus_users_db', JSON.stringify(usersDB));
+            localStorage.setItem('nexus_posts_db', JSON.stringify(postsDB));
+            localStorage.setItem('nexus_stories_db', JSON.stringify(storiesDB));
+            localStorage.setItem('nexus_groups_db', JSON.stringify(groupsDB));
+            localStorage.setItem('nexus_chats_db', JSON.stringify(chatsDB));
+        }
+
+        // --- AUTHENTICATION LOGIC ---
+        function loginWithGoogle(email) {
+            let user = usersDB.find(u => u.email === email);
+            if (!user) {
+                // Register new user with random 6-digit ID
+                const newUid = Math.floor(100000 + Math.random() * 900000).toString();
+                user = {
+                    uid: newUid,
+                    name: email === MASTER_ADMIN_EMAIL ? "المدير العام (Majid)" : email.split('@')[0],
+                    email: email,
+                    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
+                    verified: email === MASTER_ADMIN_EMAIL,
+                    banned: false,
+                    lastNameChange: 0
+                };
+                usersDB.push(user);
+            }
+
+            if (user.banned) {
+                showToast("هذا الحساب موقوف من قبل الإدارة لمخالفته القوانين.", "error");
+                return;
+            }
+
+            currentUser = user;
+            saveAllToStorage();
+            checkAuthStatus();
+            showToast("تم تسجيل الدخول بنجاح! أهلاً بك " + user.name, "success");
+        }
+
+        function loginWithCustomEmail() {
+            const emailInput = document.getElementById('customEmailInput').value.trim();
+            if (!emailInput || !emailInput.includes('@')) {
+                showToast("الرجاء إدخال بريد إلكتروني صحيح", "error");
+                return;
+            }
+            loginWithGoogle(emailInput);
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('nexus_current_user');
+            checkAuthStatus();
+            showToast("تم تسجيل الخروج بنجاح", "info");
+        }
+
+        function checkAuthStatus() {
+            const authView = document.getElementById('authView');
+            const mainDashboard = document.getElementById('mainDashboard');
+
+            if (!currentUser) {
+                authView.classList.remove('hidden');
+                mainDashboard.classList.add('hidden');
+            } else {
+                authView.classList.add('hidden');
+                mainDashboard.classList.remove('hidden');
+                
+                // Check if user is master admin
+                const isAdmin = currentUser.email === MASTER_ADMIN_EMAIL;
+                if (isAdmin) {
+                    document.getElementById('nav-admin').classList.remove('hidden');
+                    document.getElementById('mob-nav-admin').classList.remove('hidden');
+                } else {
+                    document.getElementById('nav-admin').classList.add('hidden');
+                    document.getElementById('mob-nav-admin').classList.add('hidden');
+                }
+
+                updateHeaderUI();
+                renderFeed();
+                renderStories();
+                renderGroups();
+                renderChatContacts();
+                loadProfileTab();
+                if (isAdmin) renderAdminPanel();
+            }
+        }
+
+        function updateHeaderUI() {
+            if (!currentUser) return;
+            document.getElementById('headerUserAvatar').src = currentUser.avatar;
+            document.getElementById('headerUserName').textContent = currentUser.name;
+            document.getElementById('headerUserUid').querySelector('span').textContent = currentUser.uid;
+            document.getElementById('feedUserAvatar').src = currentUser.avatar;
+            
+            const badge = document.getElementById('headerVerifiedBadge');
+            if (currentUser.verified) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+        }
+
+        // --- NAVIGATION TABS ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            // Update Nav styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-5 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+            });
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if (activeNav && tabName !== 'admin') {
+                activeNav.className = "nav-btn px-5 py-2 rounded-full font-bold text-xs flex items-center gap-2 transition-all bg-emerald-600 text-white shadow-sm";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- SEARCH FRIENDS BY ID ---
+        function searchUserById(query) {
+            const dropdown = document.getElementById('searchResultsDropdown');
+            if (!query.trim()) {
+                dropdown.classList.add('hidden');
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            const matches = usersDB.filter(u => u.uid.includes(query) || u.name.toLowerCase().includes(query.toLowerCase()));
+            if (matches.length === 0) {
+                dropdown.innerHTML = `<div class="p-3 text-xs text-slate-500 text-center">لا توجد نتائج مطابقة</div>`;
+            } else {
+                dropdown.innerHTML = matches.map(u => `
+                    <div onclick="openChatWithUser('${u.uid}')" class="flex items-center gap-3 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer transition-all">
+                        <img src="${u.avatar}" class="w-8 h-8 rounded-full object-cover">
+                        <div class="flex-1 text-right">
+                            <div class="font-bold text-xs flex items-center gap-1">
+                                ${u.name}
+                                ${u.verified ? '<i class="fa-solid fa-circle-check text-blue-500 text-[10px]"></i>' : ''}
+                            </div>
+                            <div class="text-[10px] text-slate-500 font-mono">ID: ${u.uid}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            dropdown.classList.remove('hidden');
+        }
+
+        // --- POSTS & FEED ---
+        function handlePostMediaUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                tempPostMedia.url = e.target.result;
+                tempPostMedia.type = file.type.startsWith('video') ? 'video' : 'image';
+                
+                const container = document.getElementById('postMediaPreviewContainer');
+                const img = document.getElementById('postImagePreview');
+                const vid = document.getElementById('postVideoPreview');
+                
+                container.classList.remove('hidden');
+                if (tempPostMedia.type === 'image') {
+                    img.src = tempPostMedia.url;
+                    img.classList.remove('hidden');
+                    vid.classList.add('hidden');
+                } else {
+                    vid.src = tempPostMedia.url;
+                    vid.classList.remove('hidden');
+                    img.classList.add('hidden');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removePostMedia() {
+            tempPostMedia = { url: "", type: "" };
+            document.getElementById('postMediaPreviewContainer').classList.add('hidden');
+            document.getElementById('postImagePreview').src = "";
+            document.getElementById('postVideoPreview').src = "";
+        }
+
+        function insertEmojiIntoPost(emoji) {
+            const input = document.getElementById('postContentInput');
+            input.value += emoji;
+        }
+
+        function createNewPost() {
+            const content = document.getElementById('postContentInput').value.trim();
+            if (!content && !tempPostMedia.url) {
+                showToast("الرجاء كتابة نص أو إضافة صورة/فيديو للنشر", "error");
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                authorUid: currentUser.uid,
+                content: content,
+                mediaUrl: tempPostMedia.url,
+                mediaType: tempPostMedia.type,
+                likes: [],
+                comments: [],
+                timestamp: Date.now()
+            };
+
+            postsDB.unshift(newPost);
+            saveAllToStorage();
+            
+            document.getElementById('postContentInput').value = "";
+            removePostMedia();
+            renderFeed();
+            showToast("تم نشر المنشور بنجاح! 🎉", "success");
+        }
+
+        function renderFeed() {
+            const container = document.getElementById('postsFeedContainer');
+            if (postsDB.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-500 text-xs">لا توجد منشورات حالياً. كن أول من ينشر!</div>`;
+                return;
+            }
+
+            container.innerHTML = postsDB.map(post => {
+                const author = usersDB.find(u => u.uid === post.authorUid) || { name: "مستخدم", avatar: "", verified: false };
+                const isLiked = post.likes.includes(currentUser.uid);
+
+                return `
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-6 space-y-4">
+                        <!-- Author Header -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 cursor-pointer" onclick="openChatWithUser('${author.uid}')">
+                                <img src="${author.avatar}" class="w-11 h-11 rounded-full object-cover ring-2 ring-emerald-500/30">
+                                <div>
+                                    <div class="font-black text-sm flex items-center gap-1.5">
+                                        ${author.name}
+                                        ${author.verified ? '<span class="text-blue-500 text-xs" title="موثق"><i class="fa-solid fa-circle-check"></i></span>' : ''}
+                                    </div>
+                                    <div class="text-[10px] text-slate-400">${timeAgo(post.timestamp)}</div>
+                                </div>
+                            </div>
+                            ${currentUser.email === MASTER_ADMIN_EMAIL || currentUser.uid === post.authorUid ? `
+                                <button onclick="deletePost(${post.id})" class="text-slate-400 hover:text-red-500 text-xs p-2"><i class="fa-solid fa-trash-can"></i></button>
+                            ` : ''}
+                        </div>
+
+                        <!-- Content -->
+                        ${post.content ? `<p class="text-sm leading-relaxed whitespace-pre-line">${post.content}</p>` : ''}
+
+                        <!-- Media -->
+                        ${post.mediaUrl ? `
+                            <div class="rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-800 max-h-96 flex items-center justify-center">
+                                ${post.mediaType === 'video' ? `
+                                    <video src="${post.mediaUrl}" controls class="max-h-96 w-full object-cover"></video>
+                                ` : `
+                                    <img src="${post.mediaUrl}" class="max-h-96 w-full object-cover">
+                                `}
+                            </div>
+                        ` : ''}
+
+                        <!-- Reactions / Actions -->
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500">
+                            <button onclick="toggleLikePost(${post.id})" class="flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${isLiked ? 'bg-red-500/10 text-red-500 font-bold' : 'hover:bg-slate-100 dark:hover:bg-slate-800'}">
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-base"></i>
+                                <span>${post.likes.length} إعجاب</span>
+                            </button>
+                            <button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+                                <i class="fa-regular fa-comment text-base"></i>
+                                <span>${post.comments.length} تعليق</span>
+                            </button>
+                        </div>
+
+                        <!-- Comments Section -->
+                        <div class="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                            <div class="space-y-2">
+                                ${post.comments.map(c => {
+                                    const cAuthor = usersDB.find(u => u.uid === c.authorUid) || { name: "مستخدم", avatar: "" };
+                                    return `
+                                        <div class="flex items-start gap-2.5 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-2xl">
+                                            <img src="${cAuthor.avatar}" class="w-7 h-7 rounded-full object-cover">
+                                            <div class="flex-1 text-xs">
+                                                <span class="font-bold ml-2">${cAuthor.name}</span>
+                                                <span class="text-slate-600 dark:text-slate-300">${c.text}</span>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <div class="flex items-center gap-2 pt-1">
+                                <input type="text" id="commentInput_${post.id}" placeholder="اكتب تعليقاً..." class="flex-1 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs focus:outline-none">
+                                <button onclick="addComment(${post.id})" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs">إرسال</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleLikePost(postId) {
+            const post = postsDB.find(p => p.id === postId);
+            if (!post) return;
+            const index = post.likes.indexOf(currentUser.uid);
+            if (index > -1) post.likes.splice(index, 1);
+            else post.likes.push(currentUser.uid);
+            saveAllToStorage();
+            renderFeed();
+        }
+
+        function addComment(postId) {
+            const input = document.getElementById(`commentInput_${postId}`);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const post = postsDB.find(p => p.id === postId);
+            if (!post) return;
+
+            post.comments.push({ authorUid: currentUser.uid, text: text });
+            saveAllToStorage();
+            renderFeed();
+            showToast("تم إضافة التعليق", "success");
+        }
+
+        function deletePost(postId) {
+            postsDB = postsDB.filter(p => p.id !== postId);
+            saveAllToStorage();
+            renderFeed();
+            showToast("تم حذف المنشور", "info");
+        }
+
+        // --- STORIES ---
+        function openCreateStoryModal() {
+            document.getElementById('storyModal').classList.remove('hidden');
+        }
+
+        function submitNewStory() {
+            const text = document.getElementById('storyTextInput').value.trim();
+            const fileInput = document.getElementById('storyMediaInput');
+            
+            if (!text && fileInput.files.length === 0) {
+                showToast("الرجاء إدخال نص أو صورة للقصة", "error");
+                return;
+            }
+
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    storiesDB.unshift({
+                        id: Date.now(),
+                        authorUid: currentUser.uid,
+                        text: text,
+                        mediaUrl: e.target.result,
+                        timestamp: Date.now()
+                    });
+                    saveAllToStorage();
+                    closeModal('storyModal');
+                    renderStories();
+                    showToast("تم نشر القصة بنجاح!", "success");
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                storiesDB.unshift({
+                    id: Date.now(),
+                    authorUid: currentUser.uid,
+                    text: text,
+                    mediaUrl: "",
+                    timestamp: Date.now()
+                });
+                saveAllToStorage();
+                closeModal('storyModal');
+                renderStories();
+                showToast("تم نشر القصة بنجاح!", "success");
+            }
+        }
+
+        function renderStories() {
+            const container = document.getElementById('storiesContainer');
+            container.innerHTML = `
+                <div onclick="openCreateStoryModal()" class="flex-shrink-0 w-24 h-40 bg-slate-100 dark:bg-slate-800 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:border-emerald-500 transition-all p-2 text-center">
+                    <div class="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center text-sm mb-2 shadow-md">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <span class="text-[11px] font-bold">قصتك</span>
+                </div>
+            ` + storiesDB.map(story => {
+                const author = usersDB.find(u => u.uid === story.authorUid) || { name: "مستخدم", avatar: "" };
+                return `
+                    <div class="flex-shrink-0 w-24 h-40 rounded-2xl relative overflow-hidden bg-slate-900 shadow-md cursor-pointer group" onclick="viewStory(${story.id})">
+                        ${story.mediaUrl ? `<img src="${story.mediaUrl}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">` : `
+                            <div class="absolute inset-0 bg-gradient-to-tr from-emerald-600 to-teal-500 p-3 flex items-center justify-center text-white text-center text-xs font-bold">${story.text}</div>
+                        `}
+                        <div class="absolute inset-0 bg-black/30"></div>
+                        <img src="${author.avatar}" class="absolute top-2 right-2 w-8 h-8 rounded-full border-2 border-emerald-500 object-cover">
+                        <span class="absolute bottom-2 right-2 left-2 text-[10px] text-white font-bold truncate">${author.name}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewStory(storyId) {
+            const story = storiesDB.find(s => s.id === storyId);
+            if (!story) return;
+            const author = usersDB.find(u => u.uid === story.authorUid);
+            showToast(`قصة بواسطة: ${author ? author.name : 'مستخدم'} - ${story.text || 'صورة قصة'}`, "info");
+        }
+
+        // --- GROUPS ---
+        function openCreateGroupModal() {
+            document.getElementById('groupModal').classList.remove('hidden');
+        }
+
+        function submitNewGroup() {
+            const name = document.getElementById('groupNameInput').value.trim();
+            const desc = document.getElementById('groupDescInput').value.trim();
+            if (!name) {
+                showToast("الرجاء إدخال اسم المجموعة", "error");
+                return;
+            }
+
+            groupsDB.push({
+                id: Date.now(),
+                name: name,
+                description: desc,
+                members: [currentUser.uid],
+                creatorUid: currentUser.uid
+            });
+
+            saveAllToStorage();
+            closeModal('groupModal');
+            renderGroups();
+            showToast("تم إنشاء المجموعة بنجاح!", "success");
+        }
+
+        function renderGroups() {
+            const container = document.getElementById('groupsGrid');
+            container.innerHTML = groupsDB.map(g => {
+                const isMember = g.members.includes(currentUser.uid);
+                return `
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-black text-base">${g.name}</h3>
+                                <span class="text-[10px] bg-emerald-500/10 text-emerald-500 px-2.5 py-1 rounded-full font-bold">${g.members.length} أعضاء</span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">${g.description || 'لا يوجد وصف.'}</p>
+                        </div>
+                        <button onclick="toggleJoinGroup(${g.id})" class="w-full py-2.5 rounded-xl font-bold text-xs transition-all ${isMember ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-red-500/10 hover:text-red-500' : 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md'}">
+                            ${isMember ? 'مغادرة المجموعة' : 'انضمام للمجموعة'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleJoinGroup(groupId) {
+            const group = groupsDB.find(g => g.id === groupId);
+            if (!group) return;
+            const index = group.members.indexOf(currentUser.uid);
+            if (index > -1) {
+                group.members.splice(index, 1);
+                showToast("تم مغادرة المجموعة", "info");
+            } else {
+                group.members.push(currentUser.uid);
+                showToast("تم الانضمام للمجموعة بنجاح!", "success");
+            }
+            saveAllToStorage();
+            renderGroups();
+        }
+
+        // --- MESSAGING & CALLS ---
+        function renderChatContacts() {
+            const container = document.getElementById('chatContactsList');
+            const otherUsers = usersDB.filter(u => u.uid !== currentUser.uid && !u.banned);
+
+            container.innerHTML = otherUsers.map(u => `
+                <div onclick="openChatWithUser('${u.uid}')" class="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer transition-all ${activeChatUser === u.uid ? 'bg-emerald-50 dark:bg-slate-800' : ''}">
+                    <div class="relative">
+                        <img src="${u.avatar}" class="w-11 h-11 rounded-full object-cover">
+                        <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-900"></span>
+                    </div>
+                    <div class="flex-1 text-right">
+                        <div class="font-bold text-xs flex items-center gap-1">
+                            ${u.name}
+                            ${u.verified ? '<i class="fa-solid fa-circle-check text-blue-500 text-[10px]"></i>' : ''}
+                        </div>
+                        <div class="text-[10px] text-slate-400 font-mono">ID: ${u.uid}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterChatContacts(query) {
+            // Simplified filter for contacts
+        }
+
+        function openChatWithUser(uid) {
+            activeChatUser = uid;
+            const targetUser = usersDB.find(u => u.uid === uid);
+            if (!targetUser) return;
+
+            switchTab('messages');
+            document.getElementById('chatMainArea').classList.remove('hidden');
+            document.getElementById('activeChatName').textContent = targetUser.name;
+            document.getElementById('activeChatAvatar').src = targetUser.avatar;
+
+            renderChatMessages();
+        }
+
+        function getChatKey(uid1, uid2) {
+            return [uid1, uid2].sort().join('_');
+        }
+
+        function renderChatMessages() {
+            if (!activeChatUser) return;
+            const key = getChatKey(currentUser.uid, activeChatUser);
+            const messages = chatsDB[key] || [];
+            const container = document.getElementById('chatMessagesContainer');
+
+            container.innerHTML = messages.map(m => {
+                const isMe = m.senderUid === currentUser.uid;
+                return `
+                    <div class="flex ${isMe ? 'justify-start' : 'justify-end'}">
+                        <div class="max-w-[70%] p-3.5 rounded-2xl text-xs ${isMe ? 'bg-emerald-600 text-white rounded-bl-none' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-br-none'} shadow-sm">
+                            <p>${m.text}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatMessageInput');
+            const text = input.value.trim();
+            if (!text || !activeChatUser) return;
+
+            const key = getChatKey(currentUser.uid, activeChatUser);
+            if (!chatsDB[key]) chatsDB[key] = [];
+
+            chatsDB[key].push({
+                senderUid: currentUser.uid,
+                text: text,
+                time: Date.now()
+            });
+
+            saveAllToStorage();
+            input.value = "";
+            renderChatMessages();
+        }
+
+        function handleChatKeyPress(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function startVoiceCall() {
+            const targetUser = usersDB.find(u => u.uid === activeChatUser);
+            if (!targetUser) return;
+            document.getElementById('callUserName').textContent = targetUser.name;
+            document.getElementById('callUserAvatar').src = targetUser.avatar;
+            document.getElementById('callStatusText').textContent = "جاري الاتصال الصوتي...";
+            document.getElementById('callModal').classList.remove('hidden');
+        }
+
+        function startVideoCall() {
+            const targetUser = usersDB.find(u => u.uid === activeChatUser);
+            if (!targetUser) return;
+            document.getElementById('callUserName').textContent = targetUser.name;
+            document.getElementById('callUserAvatar').src = targetUser.avatar;
+            document.getElementById('callStatusText').textContent = "جاري الاتصال المرئي (فيديو)...";
+            document.getElementById('callModal').classList.remove('hidden');
+        }
+
+        function toggleMuteCall() {
+            showToast("تم كتم/إلغاء كتم الميكروفون", "info");
+        }
+
+        function endActiveCall() {
+            document.getElementById('callModal').classList.add('hidden');
+            showToast("تم إنهاء المكالمة", "info");
+        }
+
+        // --- PROFILE MANAGEMENT & WEEKLY RULE ---
+        function loadProfileTab() {
+            document.getElementById('profileEditAvatar').src = currentUser.avatar;
+            document.getElementById('profileEditNameDisplay').textContent = currentUser.name;
+            document.getElementById('profileEditUidDisplay').textContent = currentUser.uid;
+            document.getElementById('newNameInput').value = currentUser.name;
+
+            const badge = document.getElementById('profileEditVerifiedBadge');
+            if (currentUser.verified) badge.classList.remove('hidden');
+            else badge.classList.add('hidden');
+
+            // Cooldown check for name change (once every week = 7 * 24 * 3600 * 1000 ms)
+            const weekMs = 7 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            const timePassed = now - (currentUser.lastNameChange || 0);
+            const notice = document.getElementById('nameCooldownNotice');
+
+            if (timePassed < weekMs) {
+                const daysLeft = Math.ceil((weekMs - timePassed) / (1000 * 60 * 60 * 24));
+                notice.textContent = `متبقي ${daysLeft} أيام مسموحة لتغيير الاسم مرة أخرى (القانون: مرة كل أسبوع).`;
+            } else {
+                notice.textContent = "يمكنك تغيير اسمك الآن.";
+            }
+        }
+
+        function updateProfileAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentUser.avatar = e.target.result;
+                // Update in usersDB as well
+                const idx = usersDB.findIndex(u => u.uid === currentUser.uid);
+                if (idx > -1) usersDB[idx].avatar = currentUser.avatar;
+
+                saveAllToStorage();
+                updateHeaderUI();
+                loadProfileTab();
+                renderFeed();
+                showToast("تم تحديث صورة البروفايل بنجاح!", "success");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileName() {
+            const newName = document.getElementById('newNameInput').value.trim();
+            if (!newName) {
+                showToast("الاسم لا يمكن أن يكون فارغاً", "error");
+                return;
+            }
+
+            const weekMs = 7 * 24 * 60 * 60 * 1000;
+            const now = Date.now();
+            const timePassed = now - (currentUser.lastNameChange || 0);
+
+            // Allow master admin or check cooldown
+            if (currentUser.email !== MASTER_ADMIN_EMAIL && timePassed < weekMs) {
+                showToast("عذراً، لا يمكنك تغيير اسمك سوى مرة واحدة كل أسبوع!", "error");
+                return;
+            }
+
+            currentUser.name = newName;
+            currentUser.lastNameChange = now;
+
+            const idx = usersDB.findIndex(u => u.uid === currentUser.uid);
+            if (idx > -1) {
+                usersDB[idx].name = newName;
+                usersDB[idx].lastNameChange = now;
+            }
+
+            saveAllToStorage();
+            updateHeaderUI();
+            loadProfileTab();
+            renderFeed();
+            showToast("تم تحديث الاسم بنجاح!", "success");
+        }
+
+        // --- ADMIN & MODERATION PANEL ---
+        function renderAdminPanel() {
+            if (currentUser.email !== MASTER_ADMIN_EMAIL) return;
+
+            document.getElementById('adminTotalUsersCount').textContent = usersDB.length;
+            document.getElementById('adminVerifiedCount').textContent = usersDB.filter(u => u.verified).length;
+            document.getElementById('adminBannedCount').textContent = usersDB.filter(u => u.banned).length;
+
+            renderAdminUsersTable('');
+        }
+
+        function renderAdminUsersTable(searchFilter) {
+            const tbody = document.getElementById('adminUsersTableBody');
+            const filtered = usersDB.filter(u => u.name.toLowerCase().includes(searchFilter.toLowerCase()) || u.email.toLowerCase().includes(searchFilter.toLowerCase()) || u.uid.includes(searchFilter));
+
+            tbody.innerHTML = filtered.map(u => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-all">
+                    <td class="p-4 flex items-center gap-3">
+                        <img src="${u.avatar}" class="w-9 h-9 rounded-full object-cover">
+                        <div>
+                            <div class="font-black">${u.name}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">ID: ${u.uid}</div>
+                        </div>
+                    </td>
+                    <td class="p-4 font-mono text-slate-500">${u.email}</td>
+                    <td class="p-4">
+                        ${u.banned ? '<span class="px-2.5 py-1 bg-red-500/10 text-red-500 rounded-full font-bold text-[10px]">موقوف / محظور</span>' : '<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-500 rounded-full font-bold text-[10px]">نشط وآمن</span>'}
+                    </td>
+                    <td class="p-4">
+                        ${u.verified ? '<span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 rounded-full font-bold text-[10px]"><i class="fa-solid fa-check"></i> موثق (شارة زرقاء)</span>' : '<span class="text-slate-400">عادي</span>'}
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="adminToggleVerify('${u.uid}')" class="px-3 py-1.5 rounded-xl font-bold text-[10px] transition-all ${u.verified ? 'bg-amber-500/10 text-amber-600 hover:bg-amber-500 hover:text-white' : 'bg-blue-500/10 text-blue-600 hover:bg-blue-500 hover:text-white'}" title="منح أو إزالة الشارة الزرقاء">
+                                ${u.verified ? 'إزالة الشارة' : 'منح الشارة الزرقاء'}
+                            </button>
+                            <button onclick="adminToggleBan('${u.uid}')" class="px-3 py-1.5 rounded-xl font-bold text-[10px] transition-all ${u.banned ? 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500 hover:text-white' : 'bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white'}" title="حظر أو إلغاء حظر">
+                                ${u.banned ? 'رفع الحظر' : 'إيقاف الحساب'}
+                            </button>
+                            ${u.email !== MASTER_ADMIN_EMAIL ? `
+                                <button onclick="adminDeleteUser('${u.uid}')" class="p-2 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-500 hover:text-white transition-all" title="حذف الحساب نهائياً">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function adminToggleVerify(uid) {
+            const user = usersDB.find(u => u.uid === uid);
+            if (!user) return;
+            user.verified = !user.verified;
+            saveAllToStorage();
+            renderAdminPanel();
+            if (currentUser.uid === uid) updateHeaderUI();
+            showToast(`تم ${user.verified ? 'منح الشارة الزرقاء لـ' : 'إزالة الشارة الزرقاء عن'} ${user.name}`, "success");
+        }
+
+        function adminToggleBan(uid) {
+            if (uid === "100001") {
+                showToast("لا يمكن حظر حساب المدير العام!", "error");
+                return;
+            }
+            const user = usersDB.find(u => u.uid === uid);
+            if (!user) return;
+            user.banned = !user.banned;
+            saveAllToStorage();
+            renderAdminPanel();
+            showToast(`تم ${user.banned ? 'إيقاف وحظر' : 'تنشيط'} حساب ${user.name}`, "info");
+        }
+
+        function adminDeleteUser(uid) {
+            if (uid === "100001") {
+                showToast("لا يمكن حذف حساب المدير العام!", "error");
+                return;
+            }
+            usersDB = usersDB.filter(u => u.uid !== uid);
+            saveAllToStorage();
+            renderAdminPanel();
+            showToast("تم حذف الحساب نهائياً من المنصة", "info");
+        }
+
+        // --- UTILS & HELPERS ---
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = "fa-solid fa-moon text-sm";
+                localStorage.setItem('nexus_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                icon.className = "fa-solid fa-sun text-sm";
+                localStorage.setItem('nexus_theme', 'dark');
+            }
+        }
+
+        function initDarkMode() {
+            const savedTheme = localStorage.getItem('nexus_theme');
+            const icon = document.getElementById('themeIcon');
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                icon.className = "fa-solid fa-moon text-sm";
+            } else {
+                document.documentElement.classList.add('dark');
+                icon.className = "fa-solid fa-sun text-sm";
+            }
+        }
+
+        function timeAgo(timestamp) {
+            const seconds = Math.floor((Date.now() - timestamp) / 1000);
+            if (seconds < 60) return "الآن";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return `منذ ${minutes} دقيقة`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `منذ ${hours} ساعة`;
+            const days = Math.floor(hours / 24);
+            return `منذ ${days} يوم`;
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-emerald-600 text-white";
+            let icon = "fa-circle-check";
+            if (type === 'error') {
+                bgClass = "bg-red-600 text-white";
+                icon = "fa-triangle-exclamation";
+            } else if (type === 'info') {
+                bgClass = "bg-slate-800 text-white";
+                icon = "fa-circle-info";
+            }
+
+            toast.className = `flex items-center gap-3 px-5 py-3 rounded-2xl shadow-xl text-xs font-bold pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300 ${bgClass}`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base"></i><span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
